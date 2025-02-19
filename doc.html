@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+    <style>
+        .card{
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-2">
+                <div class="card" id="card-1" draggable="true">
+                    <div class="card-body">
+                        <h2 class="card-title">Etape 1</h2>
+                        <p class="card-text">Description de l'etape 1</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-2">
+                <div class="card" id="card-2" draggable="true">
+                    <div class="card-body">
+                        <h2 class="card-title">Etape 2</h2>
+                        <p class="card-text">Description de l'etape 2</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-2">
+                <div class="card" id="card-3" draggable="true">
+                    <div class="card-body">
+                        <h2 class="card-title">Etape 3</h2>
+                        <p class="card-text">Description de l'etape 3</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h2>Ajouter des questions</h2>
+            <button class="btn btn-primary" id="add-question">+</button>
+            <div id="questions-container">
+                <div class="form-group">
+                    <label for="question-1">Question 1</label>
+                    <input type="text" class="form-control" id="question-1" name="question-1">
+                    <label for="question-1" class="mt-3">Commentaire 1</label>
+                    <textarea class="form-control" placeholder="Entrer un message ici" class="rows-5"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>v -->
+    <script src="./assets/js/jquery-3.2.1.slim.min.js"></script>
+    <script src="./assets/js/bootstrap.min.js"></script>
+    <script>
+        // Selectionner les card
+        const cards = document.querySelectorAll('.card');
+
+        // Ajouter l'element de drag and drop
+        cards.forEach((card) => {
+            card.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text', card.id);
+            });
+        });
+
+        // Selectionner la zone de depot
+        const dropZone = document.querySelector('.container');
+
+        // Ajouter l'element de depot
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const cardId = e.dataTransfer.getData('text');
+            const card = document.getElementById(cardId);
+
+            dropZone.appendChild(card);
+        });
+
+        const addQuestionButton = document.getElementById('add-question');
+        const questionsContainer = document.getElementById('questions-container');
+
+        let questionCount = 1;
+
+        addQuestionButton.addEventListener('click', () => {
+            questionCount++;
+            const newQuestion = `
+                <div class="form-group">
+                    <label for="question-${questionCount}">Question ${questionCount}</label>
+                    <input type="text" class="form-control" id="question-${questionCount}" name="question-${questionCount}">
+                    <label for="question-${questionCount}" class="mt-3">Commentaire ${questionCount}</label>
+                    <textarea class="form-control" placeholder="Entrer un message ici" class="rows-5"></textarea>
+                </div>
+            `;
+
+            questionsContainer.insertAdjacentHTML('beforeend', newQuestion);
+        });
+    </script>
+</body>
+</html>
