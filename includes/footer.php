@@ -2,8 +2,8 @@
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/jquery.3.7.1.min.js"></script>
     <script src="assets/js/popper.min.js"></script>
-    <!-- <script src="../assets/js/owl.carousel.min.js"></script>
-    <script src="../assets/js/owl.carousel.js"></script> -->
+    <script src="../assets/js/owl.carousel.min.js"></script>
+    <script src="../assets/js/owl.carousel.js"></script>
 
     <!-- ALERTIFY JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/alertify.min.js"></script>

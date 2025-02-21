@@ -76,70 +76,72 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-12">
                                         <h4>Procedure visa</h4>
                                         <hr>
                                         <form action="edit-client-procedure.php?id=<?= $item['visa_client'] ?>" method="POST">
-                                            <div class="row" id="procedure-list">
+                                            <div class="row">
                                                 <?php
                                                     $visa_id = $item['visa_client'];
                                                     $procedure = getAllStapesByVisaId($client_id, $visa_id);
 
                                                     if(mysqli_num_rows($procedure) > 0){
-                                                        foreach($procedure as $items){
                                                             ?>
-                                                                <div class="row" data-id="<?= $items['id_procedure'] ?>">
-                                                                    <a href="edit-client-procedure.php?id=<?= $items['id_procedure'] ?>" class="col-md-12 border p-1 mb-2 text-black d-flex align-items-center justify-content-between">
-                                                                        <input type="hidden" name="visa_id" value="<?= $item['visa_client'] ?>">
-                                                                        <?= $items['libelle_procedure'] ?>
-                                                                        <img src="../uploads/<?= $items['image'] ?>" alt="<?= $items['libelle_procedure'] ?>" width="25px" height="25px">
-                                                                        
-                                                                    </a>
-                                                                </div>
+                                                                <!-- <div class="row"> -->
+                                                                    <div class="col-md-4">
+                                                                        <div class="card">
+                                                                            <div class="card-header">
+                                                                                <h6>A venir</h6>
+                                                                            </div>
+                                                                            <div>
+                                                                                <?php
+                                                                                    foreach($procedure as $items){
+                                                                                        if($items['etat_procedure'] == 0){
+                                                                                            ?>
+                                                                                                <div class="card-body" id="procedure-list" id="upcoming">
+                                                                                                    <div class="row" rows="5" data-id="<?= $items['id_procedure'] ?>">
+                                                                                                        <a href="edit-client-procedure.php?id=<?= $items['id_procedure'] ?>" class="col-md-12 cursor-move border p-1 mb-1 text-black d-flex align-items-center justify-content-between">
+                                                                                                            <input type="hidden" name="visa_id" value="<?= $item['visa_client'] ?>">
+                                                                                                            <?= $items['libelle_procedure'] ?>
+                                                                                                            <img src="../uploads/<?= $items['image'] ?>" alt="<?= $items['libelle_procedure'] ?>" width="25px" height="25px">
+                                                                                                        </a>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            <?php
+                                                                                        }
+                                                                                    }
+                                                                                ?>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <div class="card">
+                                                                            <div class="card-header">
+                                                                                <h6>En cours...</h6>
+                                                                            </div>
+                                                                            <div class="card-body" id="in-progress">
+                                                                                <!-- Les étapes "En cours" seront ajoutées ici -->
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <div class="card">
+                                                                            <div class="card-header">
+                                                                                <h6>Cloturée</h6>
+                                                                            </div>
+                                                                            <div class="card-body" id="completed">
+                                                                                <!-- Les étapes "Cloturée" seront ajoutées ici -->
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                <!-- </div> -->
                                                             <?php
-                                                        }
                                                     } else {
                                                         echo "<tr><td class='alert alert-danger' colspan='5'>Aucun etape de procedure pour l'instant !</td></tr>";
                                                     }
                                                 ?>
                                             </div>
                                         </form>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <h4>Procedure visa</h4>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <h6>A venir</h6>
-                                                    </div>
-                                                    <div class="card-body" id="upcoming">
-                                                        <!-- Les étapes "A venir" seront ajoutées ici -->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <h6>En cours...</h6>
-                                                    </div>
-                                                    <div class="card-body" id="in-progress">
-                                                        <!-- Les étapes "En cours" seront ajoutées ici -->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <h6>Cloturée</h6>
-                                                    </div>
-                                                    <div class="card-body" id="completed">
-                                                        <!-- Les étapes "Cloturée" seront ajoutées ici -->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -151,50 +153,34 @@
         <?php
     include("./includes/footer.php"); 
 ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+<script src="./assets/js/sortable.min.js"></script>
 <script>
-    const upcoming = document.getElementById('upcoming');
-    const inProgress = document.getElementById('in-progress');
-    const completed = document.getElementById('completed');
-
-    const sortableUpcoming = new Sortable(upcoming, {
-        group: 'shared',
+    const procedureList = document.getElementById('procedure-list');
+    const sortable = new Sortable(procedureList, {
         animation: 150,
-        onEnd: updateProcedureStatus
+        onEnd: function (evt) {
+            const order = [];
+            procedureList.querySelectorAll('.row').forEach((row, index) => {
+                order.push({
+                    id: row.getAttribute('data-id'),
+                    position: index + 1
+                });
+            });
+
+            fetch('update-procedure-order.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(order)
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      console.log('Etape de procedure reordonnee');
+                  } else {
+                      console.error('Echec de chargement de l\'etape');
+                  }
+              });
+        }
     });
-
-    const sortableInProgress = new Sortable(inProgress, {
-        group: 'shared',
-        animation: 150,
-        onEnd: updateProcedureStatus
-    });
-
-    const sortableCompleted = new Sortable(completed, {
-        group: 'shared',
-        animation: 150,
-        onEnd: updateProcedureStatus
-    });
-
-    function updateProcedureStatus(evt) {
-        const itemId = evt.item.getAttribute('data-id');
-        const newStatus = evt.to.getAttribute('id');
-
-        fetch('update-procedure-status.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                id: itemId,
-                status: newStatus
-            })
-        }).then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  console.log('Status updated successfully');
-              } else {
-                  console.error('Failed to update status');
-              }
-          });
-    }
 </script>

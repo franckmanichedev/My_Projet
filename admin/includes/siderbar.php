@@ -1,7 +1,5 @@
 <?php
-
     $page = substr($_SERVER['SCRIPT_NAME'], strrpos($_SERVER['SCRIPT_NAME'],"/")+1);
-
 ?>
 
 <div class="sidebar" data-image="../assets/img/sidebar-5.jpg">
