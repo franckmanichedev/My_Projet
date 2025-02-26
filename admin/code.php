@@ -144,7 +144,7 @@
         if (isset($_POST['visa_id'])) {
             $visa_id = $_POST['visa_id'];
         } else {
-            $_SESSION['message'] = "Id_visa a ete perdue !";
+            $_SESSION['message'] = "Id_visa non spécifié !";
             header('Location: add-clients.php');
             exit();
         }
@@ -181,8 +181,9 @@
             $query_user->execute();
 
         } else {
-            $_SESSION['message'] = "Le numéro de téléphone ou l'email est déjà utilisé par un autre utilisateur.";
+            $_SESSION['message'] = "L'email est déjà utilisé par un autre utilisateur.";
             header('Location: add-clients.php');
+            // redirect("add-clients.php", "Le numéro de téléphone ou l'email est déjà utilisé par un autre utilisateur !");
         }
     } 
 

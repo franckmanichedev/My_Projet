@@ -2,7 +2,7 @@
 
     include("../config/dbconfig.php");
 
-    $data = json_decode(file_get_contents('php://input'), true);
+    $data = json_decode(file_get_contents('php://input'), true);        
 
     if ($data) {
         foreach ($data as $item) {

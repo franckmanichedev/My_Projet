@@ -4,6 +4,37 @@
     include "./includes/header.php";
 
 ?>
+<style>
+    .slow-speed-toggle {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+        background-color: #ccc;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+    
+    .toggle-icon {
+        position: absolute;
+        top: 50%;
+        left: 30%;
+        transform: translate(-50%, -50%);
+        width: 10px;
+        height: 10px;
+        background-color: #fff;
+        border-radius: 50%;
+        transition: left 0.3s ease-in-out;
+    }
+    
+    .slow-speed-toggle.active .toggle-icon {
+        left: 70%;
+    }
+    
+    .slow-speed-toggle.active {
+        background-color: #aaa;
+    }
+</style>
 <div class="content">
     <div class="row">
         <div class="col-md-12">
@@ -34,8 +65,22 @@
                                                 <td><?= $item['nom'] ?></td>
                                                 <td><?= $item['email'] ?></td>
                                                 <td>
-                                                    <input type="checkbox"  <?= $item['role'] == '1' ? "checked" : "" ?>>
-                                                    <?= $item['role'] == '1' ? "Oui" : "Non" ?>
+                                                    <?php
+                                                        $role = $item['role'];
+                                                        if($role == 1){
+                                                    ?>
+                                                        <span class="slow-speed-toggle active">
+                                                            <span class="toggle-icon"></span>
+                                                        </span>
+                                                    <?php
+                                                        } else {
+                                                            ?>
+                                                                <span class="slow-speed-toggle">
+                                                                    <span class="toggle-icon"></span>
+                                                                </span>
+                                                            <?php
+                                                        }
+                                                    ?>
                                                 </td>
                                                 <td>
                                                     <a href="edit-product.php?id=<?= $item['id'] ?>" class="btn btn-primary">Modifier</a>
@@ -69,5 +114,20 @@
         </div>
     </div>
 </div>
-
+<script>
+    const toggleButton = document.querySelectorAll('.slow-speed-toggle');
+    toggleButton.forEach((toggleButton) => {
+        toggleButton.addEventListener('click', () => {
+            toggleButton.classList.toggle('active');
+            const toggleState = toggleButton.classList.contains('active') ? 1 : 0;
+            fetch('update_role.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body:`toggle_state=${toggleState}`
+            });
+        });
+    });
+</script>
 <?php include "./includes/footer.php"; ?>

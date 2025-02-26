@@ -30,7 +30,7 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <label for="" class="">Visa demandé</label>
-                                    <select id="" onchange="showLevelSelect(this.value)" name="visa_id" class="form-select bordered" required>
+                                    <select required id="" onchange="showLevelSelect(this.value)" name="visa_id" class="form-select bordered" required>
                                         <option selected disabled>Selectionnez type visa</option>
                                         <?php
                                             $visa = getAll("visa");

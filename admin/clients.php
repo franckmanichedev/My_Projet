@@ -27,8 +27,8 @@
                     <table class="table table-hover cursor-pointer table-striped">
                         <thead>
                             <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
+                            <th>Voyageur</th>
+                            <th>Info</th>
                             <th>Modifier</th>
                             <th>Supprimer</th>
                         </thead>
@@ -41,8 +41,14 @@
                                         ?>
                                             <tr onclick="redirection('details-clients.php?id=<?= $item['id'] ?>')">
                                                 <td><?= $item['id'] ?></td>
-                                                <td><?= $item['nom'] ?></td>
-                                                <td><?= $item['email'] ?></td>
+                                                <td>
+                                                    <div class="font-weight-bold"><?= $item['nom'] ?></div>
+                                                    <div><?= $item['email'] ?></div>
+                                                </td>
+                                                <td>
+                                                    <div><?= $item['telephone'] ?></div>
+                                                    <div><?= $item['email'] ?></div>
+                                                </td>
                                                 <td>
                                                     <a href="edit-clients.php?id=<?= $item['id'] ?>" class="btn btn-primary">Voir plus...</a>
                                                     <!-- <form action="code.php" method="POST">

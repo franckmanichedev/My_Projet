@@ -38,18 +38,15 @@
     if (!function_exists('getAllStapesByVisaId')){
         function getAllStapesByVisaId($client_id, $id_visa){
             global $con;
-            $procedure_query = $con->prepare("SELECT p.*, cp.etat_client
+            $procedure_query = $con->prepare("SELECT p.*, IFNULL(cp.etat_procedure, 0) AS etat_procedure
                                             FROM `procedure` p
                                             LEFT JOIN etat_clients cp
                                             ON p.id_procedure = cp.id_procedure
                                             AND cp.id_client = ?
                                             WHERE p.id_visa = ?  ORDER BY `order` ASC");
-            // $procedure_query->bind_param("s", $id_visa);
-            $procedure_query->bind_param("ii", $id, $id_visa);
+            $procedure_query->bind_param("ii", $client_id, $id_visa);
             $procedure_query->execute();
             $procedure_result = $procedure_query->get_result();
-            // $procedures = $procedure_result->fetch_all(MYSQLI_ASSOC);
-            // $procedure_query->close();
             return $procedure_result;
         }
     }
