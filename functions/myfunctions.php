@@ -34,6 +34,18 @@
         }
     }
 
+    // Recuperer le libelle du visa en fonction de l'id visa du client
+    function getVisaLibelleById($visa_id) {
+        global $con;
+        $query = "SELECT libelle_visa FROM visa WHERE id_visa = ?";
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("i", $visa_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $visa = $result->fetch_assoc();
+        return $visa['libelle_visa'];
+    }
+
     // Récupérez les procédures associées au type de visa du client
     if (!function_exists('getAllStapesByVisaId')){
         function getAllStapesByVisaId($client_id, $id_visa){

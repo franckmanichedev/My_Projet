@@ -51,17 +51,12 @@
                                                 </td>
                                                 <td>
                                                     <a href="edit-clients.php?id=<?= $item['id'] ?>" class="btn btn-primary">Voir plus...</a>
-                                                    <!-- <form action="code.php" method="POST">
-                                                        <input type="hidden" name="product_id" value="<?= $item['id'] ?>">
-                                                        <button class="btn btn-danger" type="submit" name="delete_product_btn">Supprimer</button>
-                                                    </form> -->
                                                 </td>
                                                 <td>
                                                     <form action="code.php" method="POST">
                                                         <input type="hidden" name="product_id" value="<?= $item['id'] ?>">
                                                         <button class="btn btn-danger" type="submit" name="delete_product_btn">Supprimer</button>
                                                     </form>
-                                                    <!-- <button type="button" class="btn btn-danger delete_product_btn" value="<?= $item['id'] ?>">Supprimer</button> -->
                                                 </td>
                                             </tr>
                                         <?php

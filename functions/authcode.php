@@ -1,7 +1,6 @@
 <?php
 
     session_start();
-    // include("../config/dbconfig.php");
     include_once("myfunctions.php");
 
     if(isset($_POST["register_btn"])){
@@ -23,8 +22,9 @@
 
             // Si l'email est déjà utilisé, affiche un message d'erreur
             if ($result_query > 0) {
-                $_SESSION['message'] = "L'email est déjà utilisé par un autre utilisateur.";
-                header('Location: ../register.php');
+                redirect("../register.php", "L'email est déjà utilisé par un autre utilisateur !");
+                // $_SESSION['message'] = "L'email est déjà utilisé par un autre utilisateur.";
+                // header('Location: ../register.php');
                 exit();
             } else {
                 // Preparer la requete pour inserer un nouvel utilisateur
@@ -84,19 +84,20 @@
 
             // On verifie si l'utilisateur a les droit d'administrateur
             if($role == 1){
-                // redirect("../admin/index.php", "Bienvenue dans votre dashboard");
-                $_SESSION['message'] = "Bienvenue dans votre espace administrateur !";
-                header('Location: ../admin/index.php');
+                redirect("../admin/index.php", "Bienvenue dans votre dashboard");
+                // $_SESSION['message'] = "Bienvenue dans votre espace administrateur !";
+                // header('Location: ../admin/index.php');
             } else {
-                // redirect("../index.php", "Connexion a votre compte reussi");
-                $_SESSION['message'] = "Connexion a votre compte reussi !";
-                header('Location: ../index.php');
+                redirect("../index.php", "Connexion a votre compte reussi");
+                // $_SESSION['message'] = "Connexion a votre compte reussi !";
+                // header('Location: ../index.php');
             }
             
         } else {
             // Sinon on retourne que cet utilisateur n'existe pas
-            $_SESSION['message'] = "L'email n'existe pas.";
-            header('Location: ../register.php');
+            redirect("../register.php", "L'email n'existe pas !");
+            // $_SESSION['message'] = "L'email n'existe pas.";
+            // header('Location: ../register.php');
             exit();
         }
     }

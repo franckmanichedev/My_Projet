@@ -185,7 +185,40 @@
             header('Location: add-clients.php');
             // redirect("add-clients.php", "Le numéro de téléphone ou l'email est déjà utilisé par un autre utilisateur !");
         }
-    } 
+    } else if(isset($_POST['update_client_info_btn'])){
+        $email_id = ($_POST['email_id']);
+        $client_id = intval($_POST['client_id']);
+        $nom = $con->real_escape_string($_POST['nom']);
+        $prenom = $con->real_escape_string($_POST['prenom']);
+        $age = $con->real_escape_string($_POST['age']);
+        $profession = $con->real_escape_string($_POST['profession']);
+        $email = $con->real_escape_string($_POST['email']);
+        $telephone = $con->real_escape_string($_POST['telephone']);
+        $password = $con->real_escape_string($_POST['password']);
+        $visa_id = intval($_POST['visa_id']);
+
+        // Préparez la requête pour mettre à jour les informations du client
+        $update_query = $con->prepare("UPDATE clients SET nom = ?, prenom = ?, age = ?, profession = ?, email = ?, telephone = ?, password = ?, visa_client = ? WHERE id = ?");
+        $update_query->bind_param("ssssssssi", $nom, $prenom, $age, $profession, $email, $telephone, $password, $visa_id, $client_id);
+
+
+        $query_user = $con->prepare("UPDATE users SET nom = ?, email = ?, `password` = ? WHERE email = ?");
+        $query_user->bind_param("ssss", $nom, $email, $password, $email_id);
+
+        // Exécutez les requêtes et vérifiez si la mise à jour a réussi
+        $client_update = $update_query->execute();
+        $user_update = $query_user->execute();
+        if ($client_update && $user_update) {
+            $_SESSION['message'] = "Informations du client mises à jour avec succès !";
+            header('Location: clients.php');
+        } else {
+            $_SESSION['message'] = "Erreur de mise à jour des informations du client : " . $update_query->error;
+            header('Location: edit-clients.php?id=' . $client_id);
+        }
+
+        $update_query->close();
+        $query_user->close();
+    }
 
     // Create Update Delete Procedure Stape Part
     else if(isset($_POST['add_procedure_btn'])){

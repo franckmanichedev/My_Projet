@@ -2,242 +2,137 @@
     session_start();
     include("functions/usersfunctions.php");
     include "includes/header.php";
-?>
 
-    <div class="py-0">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <?php
-                        if(isset($_SESSION['auth'])){
-                            if(($_SESSION['role'] == 1)){
-                                ?>
-                                    <div class="col-md-12 py-5">
-                                        <em class="bg-danger form-control p-2 text-white">Vous n'etes pas autorise pour cette fonctionnalite !</em>
-                                    </div>
-                                <?php
-                            } else {
-                                ?>
-                                    <div direction="vertical" height="800px" class="stepper" id="stepper">
-                                        <div class="steps-container">
-                                            <div class="steps">
-                                            <div class="step" icon="fa fa-pencil-alt" id="1">
-                                                <div class="step-title">
-                                                <span class="step-number">01</span>
-                                                <div class="step-text">Basic Information</div>
+    // Récupérer l'email de l'utilisateur authentifié
+    $user_email = $_SESSION['auth_user']['email'];
+    $client = getClient('clients', $user_email);
+
+    if ($client->num_rows != 0) {
+        $client_data = $client->fetch_assoc();
+        $client_id = $client_data['id'];
+        $visa_id = $client_data['visa_client'];
+
+        $procedures = getProcedureStatus($client_id, $visa_id);
+
+        // Debugging: Vérifier que les données sont bien récupérées
+        // echo "<pre>";
+        // print_r($procedures);
+        // echo "</pre>";
+
+        // Trouver l'élément ayant la date la plus récente avec etat_procedure = 1
+        $recent_procedure_index = -1;
+        foreach ($procedures as $index => $procedure) {
+            if ($procedure['etat_procedure'] == 1) {
+                if ($recent_procedure_index == -1 || strtotime($procedure['updated_at']) > strtotime($procedures[$recent_procedure_index]['updated_at'])) {
+                    $recent_procedure_index = $index;
+                }
+            }
+        }
+        ?>
+
+            <div class="py-3">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                                if(isset($_SESSION['auth'])){
+                                    if(($_SESSION['role'] == 1)){
+                                        ?>
+                                            <div class="col-md-12 py-5">
+                                                <em class="bg-danger form-control p-2 text-white">Vous n'etes pas autorise pour cette fonctionnalite !</em>
+                                            </div>
+                                        <?php
+                                    } else {
+                                        ?>
+                                            <div class="stepper" id="stepper">
+                                                <div class="steps-container">
+                                                    <div class="steps">
+                                                        <?php foreach ($procedures as $index => $procedure): ?>
+                                                            <div class="step <?= $index == $recent_procedure_index ? 'active' : '' ?>" id="step-<?= $index + 1 ?>">
+                                                                <div class="step-title">
+                                                                    <span class="step-number <?= $procedure['etat_procedure'] == 2 ? 'text-success' : ($procedure['etat_procedure'] == 1 ? 'text-warning' : 'text-muted') ?> <?= $index == $recent_procedure_index ? 'recent-step' : '' ?>" onclick="showContent(<?= $index + 1 ?>)">
+                                                                        <?= str_pad($index + 1, 2, '0', STR_PAD_LEFT) ?>
+                                                                    </span>
+                                                                    <!-- <div class="step-text"><?= htmlspecialchars($procedure['libelle_procedure']) ?></div> -->
+                                                                </div>
+                                                            </div>
+                                                        <?php endforeach; ?>
+                                                    </div>
+                                                </div>
+                                                <div class="stepper-content-container">
+                                                    <?php foreach ($procedures as $index => $procedure): ?>
+                                                        <div class="stepper-content <?= $index == $recent_procedure_index ? 'active' : '' ?>" id="content-<?= $index + 1 ?>">
+                                                            <div class="content d-flex flex-column">
+                                                                <div class="col-md-12">
+                                                                    <label class="fs-5">Statut</label>
+                                                                    <p class="float-end fs-5 fw-bold">
+                                                                        <?php 
+                                                                            if ($procedure['etat_procedure'] == 0) {
+                                                                                echo '<i class="bi bi-hourglass-split text-muted fw-bold"> A venir</i>';
+                                                                            } elseif ($procedure['etat_procedure'] == 1) {
+                                                                                echo '<i class="bi bi-hourglass-bottom text-warning fw-bold"> En cours</i>';
+                                                                            } elseif ($procedure['etat_procedure'] == 2) {
+                                                                                echo '<i class="bi bi-check-circle text-success fw-bold"> Cloturee</i>';
+                                                                            }
+                                                                        ?>
+                                                                    </p>
+                                                                </div>
+                                                                <p class="text-center fs-4 fw-bold"><?= htmlspecialchars_decode($procedure['libelle_procedure']) ?></p>
+                                                                <img src="uploads/<?= htmlspecialchars_decode($procedure['image']) ?>" alt="Procedure Image" class="img-fluid" />
+                                                                <div>
+                                                                    <?php if ($index > 0): ?>
+                                                                        <button class="btn btn-dark mt-2" onclick="navigateStepper(<?= $index ?>)">Previous</button>
+                                                                    <?php endif; ?>
+                                                                    <?php if ($index < count($procedures) - 1): ?>
+                                                                        <button class="btn btn-dark mt-2 float-end" onclick="navigateStepper(<?= $index + 2 ?>)">Next</button>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?php endforeach; ?>
                                                 </div>
                                             </div>
-                                            <div class="step" icon="fa fa-info-circle" id="2">
-                                                <div class="step-title">
-                                                <span class="step-number">02</span>
-                                                <div class="step-text">Personal Data</div>
-                                                </div>
-                                            </div>
-                                            <div class="step" icon="fa fa-book-reader" id="3">
-                                                <div class="step-title">
-                                                <span class="step-number">03</span>
-                                                <div class="step-text">Terms and Conditions</div>
-                                                </div>
-                                            </div>
-                                            <div class="step" icon="fa fa-check" id="4">
-                                                <div class="step-title">
-                                                <span class="step-number">04</span>
-                                                <div class="step-text">Finish</div>
-                                                </div>
-                                            </div>
-                                            </div>
-                                        </div>
-                                            <div class="stepper-content-container">
-                                                <div class="stepper-content fade-in" stepper-label="1">
-                                                <div class="w-100 h-100" style="padding: 30px 10px; background: #f9f9f9">
-                                                    <div
-                                                    class="my-0 mx-auto"
-                                                    style="max-width: 500px; border-radius: 10px; background: #f5f5f5"
-                                                    >
-                                                    <div class="p-10 d-flex flex-column justify-content-center align-items-center">
-                                                        <div
-                                                        class="text-center pt-20 pe-0 pb-10 ps-0 fw-bold"
-                                                        style="font-size: 30px; color: #939393"
-                                                        >
-                                                        Step 1
-                                                        </div>
-                                                        <div class="p-10 d-flex flex-column justify-content-center align-items-center w-100">
-                                                        <label class="text-muted mb-2"> Username </label>
-                                                        <div class="cdb-form">
-                                                            <input type="text" class="form-control bg-light" />
-                                                        </div>
-                                                        <label class="text-muted mb-2"> Email </label>
-                                                        <div class="cdb-form">
-                                                            <input type="text" class="form-control bg-light" />
-                                                        </div>
-                                                        <label class="text-muted mb-2"> Password </label>
-                                                        <div class="cdb-form">
-                                                            <input type="password" class="form-control bg-light" />
-                                                        </div>
-                                                        <label class="text-muted mb-2"> Confirm Password </label>
-                                                        <div class="cdb-form">
-                                                            <input type="password" class="form-control bg-light" />
-                                                        </div>
-                                                        <div class="d-flex w-100 align-items-center justify-content-between">
-                                                            <button
-                                                            class="btn btn-dark btn-block mb-3 mt-5 ms-auto"
-                                                            onclick="stepper.navigate('2')"
-                                                            >
-                                                            Next
-                                                            </button>
-                                                        </div>
-                                                        </div>
-                                                    </div>
-                                                    </div>
-                                                </div>
-                                                </div>
-                                                <div class="stepper-content fade-in" stepper-label="2">
-                                                <div class="w-100 h-100" style="padding: 30px 10px; background: #f9f9f9">
-                                                    <div
-                                                    class="my-0 mx-auto"
-                                                    style="max-width: 500px; border-radius: 10px; background: #f5f5f5"
-                                                    >
-                                                    <div class="p-10 d-flex flex-column justify-content-center align-items-center">
-                                                        <div
-                                                        class="text-center pt-20 pe-0 pb-10 ps-0 fw-bold"
-                                                        style="font-size: 30px; color: #939393"
-                                                        >
-                                                        Step 2
-                                                        </div>
-                                                        <div class="p-10 d-flex flex-column justify-content-center align-items-center w-100">
-                                                        <label class="text-muted mb-2"> First Name </label>
-                                                        <div class="cdb-form">
-                                                            <input type="text" class="form-control bg-light" />
-                                                        </div>
-                                                        <label class="text-muted mb-2"> Last Name </label>
-                                                        <div class="cdb-form">
-                                                            <input type="email" class="form-control bg-light" />
-                                                        </div>
-                                                        <label class="text-muted mb-2"> Phone Number </label>
-                                                        <div class="cdb-form">
-                                                            <input type="text" class="form-control bg-light" />
-                                                        </div>
-                                                        <label class="text-muted mb-2"> Address </label>
-                                                        <div class="cdb-form">
-                                                            <input type="email" class="form-control bg-light" />
-                                                        </div>
-                                                        <label class="text-muted mb-2"> Country </label>
-                                                        <div class="cdb-form">
-                                                            <input type="text" class="form-control bg-light" />
-                                                        </div>
-    
-                                                        <div class="d-flex w-100 align-items-center justify-content-between">
-                                                            <button class="btn btn-dark btn-block mb-3 mt-5" onclick="stepper.navigate('1')">
-                                                            Previous
-                                                            </button>
-                                                            <button class="btn btn-dark btn-block mb-3 mt-5" onclick="stepper.navigate('3')">
-                                                            Next
-                                                            </button>
-                                                        </div>
-                                                        </div>
-                                                    </div>
-                                                    </div>
-                                                </div>
-                                                </div>
-                                                <div class="stepper-content fade-in" stepper-label="3">
-                                                <div class="w-100 h-100" style="padding: 30px 10px; background: #f9f9f9">
-                                                    <div
-                                                    class="my-0 mx-auto"
-                                                    style="max-width: 500px; border-radius: 10px; background: #f5f5f5"
-                                                    >
-                                                    <div class="p-10 d-flex flex-column justify-content-center align-items-center">
-                                                        <div
-                                                        class="text-center pt-20 pe-0 pb-10 ps-0 fw-bold"
-                                                        style="font-size: 30px; color: #939393"
-                                                        >
-                                                        Step 3
-                                                        </div>
-                                                        <div class="p-10 d-flex flex-column justify-content-center align-items-center w-100">
-                                                        <p>
-                                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui dicta minus molestiae
-                                                            vel beatae natus eveniet ratione temporibus aperiam harum alias officiis assumenda
-                                                            officia quibusdam deleniti eos cupiditate dolore doloribus!
-                                                        </p>
-                                                        <p>
-                                                            Ad dolore dignissimos asperiores dicta facere optio quod commodi nam tempore
-                                                            recusandae. Rerum sed nulla eum vero expedita ex delectus voluptates rem at neque
-                                                            quos facere sequi unde optio aliquam!
-                                                        </p>
-                                                        <p>
-                                                            Ad dolore dignissimos asperiores dicta facere optio quod commodi nam tempore
-                                                            recusandae. Rerum sed nulla eum vero expedita ex delectus voluptates rem at neque
-                                                            quos facere sequi unde optio aliquam!
-                                                        </p>
-                                                        <p>
-                                                            Ad dolore dignissimos asperiores dicta facere optio quod commodi nam tempore
-                                                            recusandae. Rerum sed nulla eum vero expedita ex delectus voluptates rem at neque
-                                                            quos facere sequi unde optio aliquam!
-                                                        </p>
-                                                        </div>
-                                                        <div class="d-flex w-100 align-items-center justify-content-between">
-                                                        <button class="btn btn-dark btn-block mb-3 mt-5" onclick="stepper.navigate('2')">
-                                                            Previous
-                                                        </button>
-                                                        <button class="btn btn-dark btn-block mb-3 mt-5" onclick="stepper.navigate('4')">
-                                                            Next
-                                                        </button>
-                                                        </div>
-                                                    </div>
-                                                    </div>
-                                                </div>
-                                                </div>
-                                                <div class="stepper-content fade-in" stepper-label="4">
-                                                <div class="w-100 h-100" style="padding: 30px 10px; background: #f9f9f9">
-                                                    <div
-                                                    class="my-0 mx-auto"
-                                                    style="max-width: 500px; border-radius: 10px; background: #f5f5f5"
-                                                    >
-                                                    <div class="p-10 d-flex flex-column justify-content-center align-items-center">
-                                                        <div
-                                                        class="text-center pt-20 pe-0 pb-10 ps-0 fw-bold"
-                                                        style="font-size: 30px; color: #939393"
-                                                        >
-                                                        Step 4
-                                                        </div>
-                                                        <div class="p-10 d-flex flex-column justify-content-center align-items-center w-100">
-                                                        <div class="text-center" style="font-size: 25px; text-align: center">
-                                                            Congratulations! You have completed this process.
-                                                            <span style="font-size: 50px; display: block" role="img" aria-label="image">
-                                                            🎉
-                                                            </span>
-                                                        </div>
-                                                        <div class="d-flex w-100 align-items-center justify-content-between">
-                                                            <button class="btn btn-dark btn-block mb-3 mt-5" onclick="stepper.navigate('3')">
-                                                            Previous
-                                                            </button>
-                                                        </div>
-                                                        </div>
-                                                    </div>
-                                                    </div>
-                                                </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php
-                            }
-                        }
-                    ?>
+                                        <?php
+                                    }
+                                }
+                            ?>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <!-- <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/cdbootstrap/js/cdb.min.js"></script> -->
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/jquery.3.7.1.min.js"></script>
-    <script src="assets/js/popper.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const stepperElement = document.querySelector("#stepper");
-            const stepper = new CDB.Stepper(stepperElement);
-        });
-    </script>
+            <!-- Inclure les fichiers CSS nécessaires -->
+            <link rel="stylesheet" href="assets/css/stepper.css">
 
-<?php include("includes/footer.php") ?>
+            <!-- Inclure les fichiers JavaScript nécessaires -->
+            <script src="assets/js/stepper.js"></script>
+            <script>
+                function showContent(step) {
+                    document.querySelectorAll('.stepper-content').forEach(content => {
+                        content.style.display = 'none';
+                        content.classList.remove('active');
+                    });
+                    document.querySelectorAll('.step').forEach(stepElem => {
+                        stepElem.classList.remove('active');
+                    });
+                    document.getElementById('content-' + step).style.display = 'block';
+                    document.getElementById('content-' + step).classList.add('active');
+                    document.getElementById('step-' + step).classList.add('active');
+                }
+
+                function navigateStepper(step) {
+                    showContent(step);
+                }
+
+                // Afficher le contenu de l'étape la plus récente au chargement de la page
+                document.addEventListener('DOMContentLoaded', function() {
+                    showContent(<?= $recent_procedure_index + 1 ?>);
+                });
+            </script>
+
+        <?php
+    } else {
+        echo "Aucun client trouvé avec cet email.";
+    }
+    include("includes/footer.php") 
+?>

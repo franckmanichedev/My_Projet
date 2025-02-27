@@ -21,6 +21,7 @@
             die();
     }
     $item = mysqli_fetch_assoc($orderData);
+    $libelle_visa = getVisaLibelleById($item['visa_client']);
         ?>
 
             <div class="container">
@@ -57,7 +58,7 @@
                                         <div class="col-md-3">
                                             <label class="fw-bold mb-2">Categorie</label>
                                             <div class="border p-1 text-uppercase">
-                                                <?= $item['visa_client']; ?>
+                                                <?= $libelle_visa ; ?>
                                             </div>
                                         </div>
                                         <div class="col-md-3">

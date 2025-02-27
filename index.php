@@ -30,11 +30,15 @@
                                 <img src="./assets/images/bg-banner-4.jpg" alt="" class="w-100 rounded-20" height="200px">
                                 <p class="pays justify-content-center align-items-center w-100 h-100 position-absolute m-0" style="position: absolute;">Allemagne</p>
                             </div>
-                            <div class="col-md-4">
-                                <img src="./assets/images/bg-banner-3.jpg" alt="" class="w-100" height="200px">
+                            <div class="col-md-4 container-image position-relative">
+                                <div class="noire w-100 h-100 position-absolute"></div>
+                                <img src="./assets/images/bg-banner-3.jpg" alt="" class="w-100 rounded-20" height="200px">
+                                <p class="pays justify-content-center align-items-center w-100 h-100 position-absolute m-0" style="position: absolute;">Canada</p>
                             </div>
-                            <div class="col-md-4">
-                                <img src="./assets/images/bg-banner-1.jpg" alt="" class="w-100" height="200px">
+                            <div class="col-md-4 container-image position-relative">
+                                <div class="noire w-100 h-100 position-absolute"></div>
+                                <img src="./assets/images/bg-banner-1.jpg" alt="" class="w-100 rounded-20" height="200px">
+                                <p class="pays justify-content-center align-items-center w-100 h-100 position-absolute m-0" style="position: absolute;">Russie</p>
                             </div>
                         </div>
                     </div>
@@ -144,7 +148,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-5 mb-5" id="special">
+                    <div class="row mt-5" id="special">
                         <div class="noire-footer w-100 h-100"></div>
                         <div class="card contact col-md-6 shadow">
                             <div class="header mt-3 border-none d-flex flex-column justify-content-center align-items-center">
@@ -196,6 +200,7 @@
     </div>
 
 <?php include("includes/footer.php") ?>
+
 <script>
     $(document).ready(function() {
 
@@ -247,6 +252,9 @@
         transform: scale(1.1);
     }
     .pays {
+        font-family: 'Courier';
+        font-size: 20px;
+        font-weight: bold;
         position: absolute;
         top: 0;
         left: 0;
