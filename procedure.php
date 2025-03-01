@@ -48,6 +48,7 @@
                                                 <div class="steps-container">
                                                     <div class="steps">
                                                         <?php foreach ($procedures as $index => $procedure): ?>
+                                                            <div class="band"></div>
                                                             <div class="step <?= $index == $recent_procedure_index ? 'active' : '' ?>" id="step-<?= $index + 1 ?>">
                                                                 <div class="step-title">
                                                                     <span class="step-number <?= $procedure['etat_procedure'] == 2 ? 'text-success' : ($procedure['etat_procedure'] == 1 ? 'text-warning' : 'text-muted') ?> <?= $index == $recent_procedure_index ? 'recent-step' : '' ?>" onclick="showContent(<?= $index + 1 ?>)">
@@ -78,7 +79,7 @@
                                                                     </p>
                                                                 </div>
                                                                 <p class="text-center fs-4 fw-bold"><?= htmlspecialchars_decode($procedure['libelle_procedure']) ?></p>
-                                                                <img src="uploads/<?= htmlspecialchars_decode($procedure['image']) ?>" alt="Procedure Image" class="img-fluid" />
+                                                                <img src="uploads/<?= htmlspecialchars_decode($procedure['image']) ?>" alt="Procedure Image" class="img-fluid image-animate" />
                                                                 <div>
                                                                     <?php if ($index > 0): ?>
                                                                         <button class="btn btn-dark mt-2" onclick="navigateStepper(<?= $index ?>)">Previous</button>
@@ -128,6 +129,19 @@
                 document.addEventListener('DOMContentLoaded', function() {
                     showContent(<?= $recent_procedure_index + 1 ?>);
                 });
+
+                // Déconnexion automatique après 30 minutes d'inactivité
+                let timeout;
+                function resetTimeout() {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        window.location.href = 'logout.php';
+                    }, 180000); // 30 minutes en millisecondes
+                }
+
+                document.addEventListener('mousemove', resetTimeout);
+                document.addEventListener('keypress', resetTimeout);
+                resetTimeout(); // Initialiser le timeout au chargement de la page
             </script>
 
         <?php

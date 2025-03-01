@@ -25,17 +25,17 @@
                         <p class="text-uppercase text-center">Destinations que vous pouvez visiter</p>
                         <h3 class="text-center titre mb-4">Les destinations que nous soutenons pour l'<span style="color: red;"><br>immigration</span></h3>
                         <div class="row">
-                            <div class="col-md-4 container-image position-relative">
+                            <div class="col-md-4 mt-3 container-image position-relative">
                                 <div class="noire w-100 h-100 position-absolute"></div>
                                 <img src="./assets/images/bg-banner-4.jpg" alt="" class="w-100 rounded-20" height="200px">
                                 <p class="pays justify-content-center align-items-center w-100 h-100 position-absolute m-0" style="position: absolute;">Allemagne</p>
                             </div>
-                            <div class="col-md-4 container-image position-relative">
+                            <div class="col-md-4 mt-3 container-image position-relative">
                                 <div class="noire w-100 h-100 position-absolute"></div>
                                 <img src="./assets/images/bg-banner-3.jpg" alt="" class="w-100 rounded-20" height="200px">
                                 <p class="pays justify-content-center align-items-center w-100 h-100 position-absolute m-0" style="position: absolute;">Canada</p>
                             </div>
-                            <div class="col-md-4 container-image position-relative">
+                            <div class="col-md-4 mt-3 container-image position-relative">
                                 <div class="noire w-100 h-100 position-absolute"></div>
                                 <img src="./assets/images/bg-banner-1.jpg" alt="" class="w-100 rounded-20" height="200px">
                                 <p class="pays justify-content-center align-items-center w-100 h-100 position-absolute m-0" style="position: absolute;">Russie</p>
@@ -84,7 +84,7 @@
                                             hauteur de leurs attentes.
                                         </p>
                                     </div>
-                                    <div class="col-md-6 border p-3 shadow">
+                                    <div class="col-md-6 border p-3 mb-2 shadow">
                                         <h6><i class="bi bi-cash-stack m-3"></i>Rentable</h6>
                                         <p>
                                             Chez ZONE TRAVEL, nous voulons que vous viviez l’expérience de

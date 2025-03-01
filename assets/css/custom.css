@@ -54,3 +54,221 @@ a:hover{
     flex-direction: column !important;
     gap: 5px !important;
 }
+
+/*
+
+    MA PROCEDURE PART
+
+*/
+
+/* assets/css/stepper.css */
+
+.stepper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.steps-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.steps {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.step-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.step-text {
+    font-size: 16px;
+}
+
+.stepper-content-container {
+    width: 100%;
+}
+
+.stepper-content {
+    display: none;
+}
+
+.stepper-content.active {
+    display: block;
+}
+
+.content {
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 10px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.step-number {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 24px;
+    font-weight: bold;
+    position: relative;
+    display: inline-block;
+    padding: 0 10px;
+    /* border-radius: 50%; */
+    background-color: #f0f0f0;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.step-number::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    width: 50px;
+    height: 2px;
+    background: repeating-linear-gradient(
+        to right,
+        #000,
+        #000 5px,
+        transparent 5px,
+        transparent 10px
+    );
+}
+
+.band{
+    /* position: absolute; */
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vh;
+    background-color: black;
+    height: 5px;
+}
+
+.step-number:last-child::after {
+    display: none;
+}
+
+.recent-step {
+    border: 2px solid #007bff;
+}
+
+.step.active .step-number {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.stepper-content.active {
+    display: block;
+}
+
+/* Media queries pour les différentes tailles d'écran */
+
+/* Petits appareils (téléphones, moins de 600px) */
+@media (max-width: 600px) {
+    .step-number {
+        padding: 8px;
+        margin-right: 5px;
+    }
+
+    .step-number::after {
+        width: 30px;
+    }
+
+    .stepper-content {
+        padding: 10px;
+    }
+
+    .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+
+/* Tablettes (entre 600px et 768px) */
+@media (min-width: 600px) and (max-width: 768px) {
+    .step-number {
+        padding: 10px;
+        margin-right: 8px;
+    }
+
+    .step-number::after {
+        width: 40px;
+    }
+
+    .stepper-content {
+        padding: 15px;
+    }
+
+    .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+
+/* Ordinateurs de bureau (plus de 768px) */
+@media (min-width: 768px) {
+    .step-number {
+        padding: 12px;
+        margin-right: 10px;
+    }
+
+    .step-number::after {
+        width: 50px;
+    }
+
+    .stepper-content {
+        padding: 20px;
+    }
+
+    .btn {
+        width: auto;
+        margin-top: 0;
+    }
+}
+
+
+
+/* Animation pour faire entrer l'image en fondue venant de la gauche */
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Animation pour l'effet de flotter */
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Appliquer les animations à l'image */
+.image-animate {
+    animation: fadeInLeft 1s ease-in-out, float 3s infinite ease-in-out;
+}
