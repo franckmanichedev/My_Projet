@@ -244,6 +244,7 @@ a:hover{
 
 
 /* Animation pour faire entrer l'image en fondue venant de la gauche */
+
 @keyframes fadeInLeft {
     from {
         opacity: 0;
@@ -271,4 +272,19 @@ a:hover{
 /* Appliquer les animations à l'image */
 .image-animate {
     animation: fadeInLeft 1s ease-in-out, float 3s infinite ease-in-out;
+}
+
+/* Faire roter l'icone d'attente de lancement de la procedure */
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.icon-rotate {
+    display: inline-block;
+    animation: rotate 2s linear infinite;
 }

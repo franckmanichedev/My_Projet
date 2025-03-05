@@ -2,8 +2,8 @@
         <div class="container">
             <div class="row w-100 d-flex justify-content-between align-items-center">
                 <div class="col-md-8 d-none d-md-flex align-items-center">
-                    <a class="text-white me-3" href="mailto:contact@zone-travel.net"><i class="bi bi-envelope-fill"></i>contact@zone-travel.net</a>
-                    <a class="text-white" href="https://maps.app.goo.gl/HV9F7c6EDoDikTtHA" blank_><i class="bi bi-geo-alt-fill"></i>Douala-Bonnamoussadi, Face Hopital ADLUCEM</a>
+                    <a class="text-white me-3" href="mailto:contact@zone-travel.net" target="_blank"><i class="bi bi-envelope-fill"></i>contact@zone-travel.net</a>
+                    <a class="text-white" href="https://maps.app.goo.gl/HV9F7c6EDoDikTtHA" target="_blank"><i class="bi bi-geo-alt-fill"></i>Douala-Bonnamoussadi, Face Hopital ADLUCEM</a>
                 </div>
                 <div class="col-md-4 d-flex justify-content-end align-items-center">
                     <a class="text-white social-icon me-2" href=""><i class="bi bi-facebook"></i></a>
