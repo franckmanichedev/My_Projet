@@ -52,9 +52,9 @@
                     <?php 
                         } else {
                     ?>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link text-black" href="register.php">S'incrire</a>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
                             <a class="nav-link text-black" href="login.php">Se connecter</a>
                         </li>
