@@ -71,18 +71,11 @@
                                     <label for="">Email</label>
                                     <input type="email" name="email" placeholder="Entrer l'email" class="form-control" required>
                                 </div>
-                                <div class="col-md-12" id="levelSelect" style="display: none;">
-                                    <label for="">Niveau langue</label>
-                                    <select name="niveau" class="form-select bordered" required>
-                                        <option selected disabled>Selectionnez le niveau</option>
-                                        <option value="a1">Niveau debutant (A1)</option>
-                                        <option value="a2">Niveau intermediaire (A2)</option>
-                                        <option value="b1">Niveau classique (B1)</option>
-                                        <option value="b2">Niveau avance (B1)</option>
-                                    </select>
-                                </div>
                                 <div class="col-lg-12">
-                                    <button type="submit" class="btn btn-primary" name="add_client_btn">Enregistrer</button>
+                                    <a href="google-login.php" class="btn btn-danger">
+                                        <i class="bi bi-google"></i> Se connecter avec Google
+                                    </a>
+                                    <button type="submit" class="float-end btn btn-primary" name="add_client_btn">Enregistrer</button>
                                 </div>
                             </div>
                         </form>

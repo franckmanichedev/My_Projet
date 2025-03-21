@@ -1,0 +1,20 @@
+{
+    "name": "my-project/my-package",
+    "description": "A PHP project for managing visa categories and clients.",
+    "type": "project",
+    "require": {
+        "phpmailer/phpmailer": "^6.8",
+        "guzzlehttp/guzzle": "^7.0",
+        "monolog/monolog": "^2.0",
+        "php": ">=7.4",
+        "ext-mbstring": "*",
+        "google/apiclient": "^2.16"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

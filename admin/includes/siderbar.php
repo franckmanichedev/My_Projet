@@ -29,21 +29,32 @@
                 </a>
             </li>
             <?php
-                $userId = $_SESSION['auth_user']['user_id'];
+                if(isset($_SESSION['auth'])){
+                    if($role = $_SESSION['role'] == 1);
 
-                $superAdmin = getAllAdmin("admin");
-                
-                if(mysqli_num_rows($superAdmin) > 0){
-                    while ($access = mysqli_fetch_assoc($superAdmin)){
-                        if($access['id'] == $userId){
-                            ?>
-                                <li class="nav-item <?= $page == "admin.php" ? "active":"";?>">
-                                    <a class="nav-link" href="admin.php">
-                                        <i class="bi bi-person-badge"></i>
-                                        <p>Administrateur</p>
-                                    </a>
-                                </li>
-                            <?php
+                    // $superAdmin = getAll("admin");
+                    
+                    $superAdmin = getAllAdmin("admin");
+
+                    if(mysqli_num_rows($superAdmin) > 0){
+                        foreach($superAdmin as $item){
+                            $role_as = $item['role'];
+                            // while ($access = mysqli_fetch_assoc($superAdmin)){
+                                if($role_as != 0){
+
+                                    // if($access['id'] == $userId){
+                                        ?>
+                                            <li class="nav-item <?= $page == "admin.php" ? "active":"";?>">
+                                                <a class="nav-link" href="admin.php">
+                                                    <i class="bi bi-person-badge"></i>
+                                                    <p>Administrateur</p>
+                                                </a>
+                                            </li>
+                                        <?php
+                                    // }
+
+                                }
+                            // }
                         }
                     }
                 }

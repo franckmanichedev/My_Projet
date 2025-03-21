@@ -102,7 +102,7 @@
                                 } else {
                                     echo "
                                         <tr class='col-lg-12'>
-                                            <td class='alert alert-danger' colspan='5'>Aucune catégorie trouvée</td>
+                                            <td class='alert alert-danger' colspan='5'>Aucune utilisateurs trouvée</td>
                                         </tr>
                                     ";
                                 }

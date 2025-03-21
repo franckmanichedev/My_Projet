@@ -137,6 +137,30 @@
         }
     }
 
+    //
+    function getProcedureStatus($client_id, $visa_id) {
+        global $con;
+    
+        // Récupérer toutes les procédures liées au type de visa et l'état de chaque procédure pour un utilisateur particulier
+        $query = "SELECT p.id_procedure, p.libelle_procedure, p.description_procedure, p.image, 
+                         ec.etat_procedure, ec.updated_at 
+                  FROM `procedure` p
+                  LEFT JOIN etat_clients ec ON p.id_procedure = ec.id_procedure AND ec.id_client = ?
+                  WHERE p.id_visa = ?
+                  ORDER BY p.order ASC";
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("ii", $client_id, $visa_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $procedures = [];
+        while ($row = $result->fetch_assoc()) {
+            $procedures[] = $row;
+        }
+    
+        return $procedures;
+    }
+
     // Fonction pour rediriger les utilisateur
     if (!function_exists('redirect')){
         function redirect($url, $message){

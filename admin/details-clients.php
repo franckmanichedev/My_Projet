@@ -46,7 +46,7 @@
                                     <a href="clients.php" class="btn btn-primary float-end"><i class="bi bi-reply-fill"></i> Retour</a>
                                 </div>
                                 <div class="col-md-12">
-                                    <h4>Details visa</h4>
+                                    <h4>Details voyageur</h4>
                                     <hr>
                                     <div class="row">
                                         <div class="col-md-3">
@@ -79,8 +79,10 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <h4>Procedure visa</h4>
-                                        <hr>
+                                        <div class="row mt-2 d-flex justify-content-between align-items-center">
+                                            <h4 class="col-md-6">Procedure visa</h4>
+                                            <button id="saveChanges" name="save_state_client" type="submit" class="btn btn-success col-md-2 float-end">Enregistrer</button>
+                                        </div>
                                         <form action="details-clients.php?id=<?= $client_id ?>" method="POST">
                                             <div class="row">
                                                 <?php
@@ -168,11 +170,6 @@
                                                         echo "<tr><td class='alert alert-danger' colspan='5'>Aucun etape de procedure pour l'instant !</td></tr>";
                                                     }
                                                 ?>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-12 text-end">
-                                                    <button id="saveChanges" name="save_state_client" type="submit" class="btn btn-success">Enregistrer</button>
-                                                </div>
                                             </div>
                                         </form>
                                     </div>

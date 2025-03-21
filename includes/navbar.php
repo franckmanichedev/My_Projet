@@ -26,30 +26,38 @@
                     <li class="nav-item">
                         <a class="nav-link text-black active" aria-current="page" href="index.php">Accueil</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-black" href="procedure.php">Ma procedure</a>
-                    </li>
+                    <?php
+                        if(isset($_SESSION['auth'])){
+                            if(($_SESSION['role'] != 1)){
+                                ?>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-black" href="procedure.php">Ma procedure</a>
+                                    </li>
+                                <?php
+                            }
+                        }
+                    ?>
                     <?php
                         if(isset($_SESSION['auth'])){
                             if(($_SESSION['role'] == 1)){
-                    ?>
-                                <li class="nav-item">
-                                    <a class="nav-link text-black" href="admin/index.php">Dashboard</a>
-                                </li>
+                                ?>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-black" href="admin/index.php">Dashboard</a>
+                                    </li>
                                 <?php
                             }
-                        ?>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-black" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <?= $_SESSION['auth_user']['nom']; ?>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item text-black" href="#">Action</a></li>
-                                <li><a class="dropdown-item text-black" href="#">Another action</a></li>
-                                <li><a class="dropdown-item text-black" href="../logout.php">Se deconnecter</a></li>
-                            </ul>
-                        </li>
-                    <?php 
+                            ?>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-black" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <?= $_SESSION['auth_user']['nom']; ?>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item text-black" href="#">Action</a></li>
+                                    <li><a class="dropdown-item text-black" href="#">Another action</a></li>
+                                    <li><a class="dropdown-item text-black" href="../logout.php">Se deconnecter</a></li>
+                                </ul>
+                            </li>
+                        <?php 
                         } else {
                     ?>
                         <!-- <li class="nav-item">

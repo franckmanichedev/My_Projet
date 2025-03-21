@@ -1,4 +1,9 @@
 <?php
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\SMTP;
+    use PHPMailer\PHPMailer\Exception;
+
+    require '../vendor/autoload.php';
 
     session_start();
     include("../config/dbconfig.php");
@@ -141,49 +146,151 @@
     
     // Create Update Delete Users Part
     else if(isset($_POST['add_client_btn'])){
-        if (isset($_POST['visa_id'])) {
-            $visa_id = $_POST['visa_id'];
-        } else {
-            $_SESSION['message'] = "Id_visa non spécifié !";
+        $email = $con->real_escape_string($_POST['email']);
+
+        // Verifier si l'email est valide
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['message'] = "L'email n'est pas valide !";
             header('Location: add-clients.php');
             exit();
         }
-        $nom = $con->real_escape_string($_POST['nom']);
-        $prenom = $con->real_escape_string($_POST['prenom']);
-        $phone = $con->real_escape_string($_POST['phone']);
-        $email = $con->real_escape_string($_POST['email']);
-        $age = $con->real_escape_string($_POST['age']);
-        $profession = $con->real_escape_string($_POST['profession']);
 
-        $check_query = $con->prepare("SELECT * FROM clients WHERE telephone = ? OR email = ?");
-        $check_query->bind_param("ss", $phone, $email);
-        $check_query->execute();
-        $result = $check_query->get_result();
+        // Verifier si l'email existe reellement
+        $apiKey = "01420130d22c46088e948d87b5633df3";
+        $url = "https://emailvalidation.abstractapi.com/v1/?api_key=$apiKey&email=$email";
 
-        $check_users = $con->prepare("SELECT * FROM users WHERE email = ?");
-        $check_users->bind_param("s", $email);
-        $check_users->execute();
-        $result = $check_users->get_result();
+        $response = file_get_contents($url);
+        $result = json_decode($response, true);
 
-        if(mysqli_num_rows($result) == 0){
-            $query_client = $con->prepare("INSERT INTO clients(nom, prenom, age, profession, email, telephone, visa_client) VALUES ( ?, ?, ?, ?, ?, ?, ?)");
-            $query_client->bind_param("ssssssi", $nom, $prenom, $age, $profession, $email, $phone, $visa_id);
-
-            if($query_client->execute()){
-                $_SESSION['message'] = "Voyageurs ajoute avec succes !";
-                header('Location: clients.php');
-                // redirect("visa.php", "Categorie ajoute avec succes !");
-            }
-            
-            $role = 0;
-            $query_user = $con->prepare("INSERT INTO users (nom, email, `role`) VALUES (?, ?, ?)");
-            $query_user->bind_param("ssi", $nom, $email, $role);
-            $query_user->execute();
-
-        } else {
-            $_SESSION['message'] = "L'email est déjà utilisé par un autre utilisateur.";
+        if (!$result['is_valid_format']['value'] || $result['deliverability'] !== 'DELIVERABLE') {
+            $_SESSION['message'] = "L'email que vous avez entré n'existe pas !";
             header('Location: add-clients.php');
-            // redirect("add-clients.php", "Le numéro de téléphone ou l'email est déjà utilisé par un autre utilisateur !");
+            exit();
+        }else{
+            if (isset($_POST['visa_id'])) {
+                $visa_id = $_POST['visa_id'];
+            } else {
+                $_SESSION['message'] = "Id_visa non spécifié !";
+                header('Location: add-clients.php');
+                exit();
+            }
+            $nom = $con->real_escape_string($_POST['nom']);
+            $prenom = $con->real_escape_string($_POST['prenom']);
+            $phone = $con->real_escape_string($_POST['phone']);
+            $age = $con->real_escape_string($_POST['age']);
+            $profession = $con->real_escape_string($_POST['profession']);
+
+            $check_query = $con->prepare("SELECT * FROM clients WHERE telephone = ? OR email = ?");
+            $check_query->bind_param("ss", $phone, $email);
+            $check_query->execute();
+            $result = $check_query->get_result();
+
+            $check_users = $con->prepare("SELECT * FROM users WHERE email = ?");
+            $check_users->bind_param("s", $email);
+            $check_users->execute();
+            $result = $check_users->get_result();
+
+            if(mysqli_num_rows($result) == 0){
+                $query_client = $con->prepare("INSERT INTO clients(nom, prenom, age, profession, email, telephone, visa_client) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $query_client->bind_param("ssssssi", $nom, $prenom, $age, $profession, $email, $phone, $visa_id);
+
+                if($query_client->execute()){
+                    $client_id = $query_client->insert_id; // Recupere l'id du client
+                    
+                    // Envoyer un email de au client pour l'inviter a entrer un mot de passe
+                    $mail = new PHPMailer(true);
+
+                    try {
+                        //Configuration du serveur SMTP
+                        $mail->isSMTP();  // Serveur SMTP
+                        $mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
+                        $mail->SMTPAuth = true; // Activation de l'authentification SMTP
+                        $mail->Username = 'franckmaniche6@gmail.com';
+                        $mail->Password = 'thpp ipjq dkjh kvdl'; // SMTP password
+                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                        $mail->SMTPDebug = SMTP::DEBUG_OFF; // Desactivation du debogage
+                        $mail->Port = 587;
+
+                        //Configuration de l'email
+                        $mail->setFrom('franckmaniche6@gmail.com', 'Franck Maniche');
+                        $mail->addAddress($email, $nom . ' ' . $prenom);
+
+                        //Contenu de l'email
+                        $mail->isHTML(true);
+                        $mail->Subject = 'Invitation a creer un mot de passe';
+                        $mail->Body = "
+                            <h3>Bonjour $nom,</h3>
+                            <p>Cher client votre compte viens d'etre creer, merci de nous faire confiance.<br>
+                            Veuillez cliquer sur le lien ci-dessous pour définir votre mot de passe :</p>
+                            <a href='http://localhost:8080/My%20Projet/admin/add-password.php?id=$client_id' class='btn btn-info col-md-3'>Définir mon mot de passe</a>
+                            <p>Merci,</p>
+                            <p>L'équipe de la direction visa</p>
+                        ";
+                        $mail->AltBody = 'Veuillez cliquer sur le lien pour définir votre mot de passe.';
+                        
+                        $mail->send();
+                        $_SESSION['message'] = "Client ajoute avec succes !";
+                        header("Location: add-password.php?id=$client_id");
+                        // redirect("visa.php", "Client ajoute avec succes !");
+                        exit();
+                    } catch (Exception $e) {
+                        $_SESSION['message'] = "Erreur lors de l'envoi de l'email : " . $mail->ErrorInfo;
+                        header("Location: add-clients.php");
+                        // redirect("add-clients.php", "Erreur lors de l'envoi de l'email : " . $mail->ErrorInfo);
+                        exit();
+                    }
+                } else {
+                    $_SESSION['message'] = "Erreur d'ajout du client !" . $query_client->error;
+                    header("Location: add-clients.php");
+                    // redirect("add-clients.php", "Erreur d'ajout du client !" . $query_client->error);
+                    exit();
+                }
+                
+                $role = 0;
+                var_dump($nom, $email, $role);
+                $query_user = $con->prepare("INSERT INTO users (nom, email, `role`) VALUES (?, ?, ?)");
+                $query_user->bind_param("ssi", $nom, $email, $role);
+                
+                if(!$query_user->execute()){
+                    $_SESSION['message'] = "Erreur d'ajout de l'utilisateur !" . $query_user->error;
+                    header("Location: add-clients.php");
+                    exit();
+                } else {
+                    $_SESSION['message'] = "Utilisateur ajoute avec succes !";
+                    header("Location: add-clients.php");
+                    exit();
+                }
+
+            } else {
+                $_SESSION['message'] = "L'email est déjà utilisé par un autre utilisateur.";
+                header('Location: add-clients.php');
+                // redirect("add-clients.php", "Le numéro de téléphone ou l'email est déjà utilisé par un autre utilisateur !");
+            }
+        }
+    } else if(isset($_POST['add_pwd_client_btn'])){ 
+        $id_client = intval($_POST['id_client']);
+        $password = $con->real_escape_string($_POST['password']);
+        $confirm_password = $con->real_escape_string($_POST['confirm_password']);
+
+        if ($confirm_password == $password){
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $query = $con->prepare("UPDATE clients SET password = ? WHERE id = ?");
+            $query->bind_param("si", $hashed_password, $id_client);
+
+            if($query->execute()){
+                $_SESSION['message'] = "Mot de passe ajoute avec succes !";
+                header('Location: clients.php');
+                // redirect("clients.php", "Mot de passe ajoute avec succes !");
+                exit();
+            } else {
+                $_SESSION['message'] = "Erreur d'ajout du mot de passe !" . $query->error;
+                header('Location: add-password.php?id=' . $id_client);
+                // redirect("add-password.php?id=' . $id_client", "Erreur d'ajout du mot de passe !" . $visa_query->error);
+                exit();
+            }
+        } else {
+            $_SESSION['message'] = "Les mots de passe ne correspondent pas !";
+            header('Location: add-password.php?id=' . $id_client);
         }
     } else if(isset($_POST['update_client_info_btn'])){
         $email_id = ($_POST['email_id']);
@@ -197,13 +304,15 @@
         $password = $con->real_escape_string($_POST['password']);
         $visa_id = intval($_POST['visa_id']);
 
+        $hpwd = password_hash($password, PASSWORD_DEFAULT);
+
         // Préparez la requête pour mettre à jour les informations du client
         $update_query = $con->prepare("UPDATE clients SET nom = ?, prenom = ?, age = ?, profession = ?, email = ?, telephone = ?, password = ?, visa_client = ? WHERE id = ?");
-        $update_query->bind_param("ssssssssi", $nom, $prenom, $age, $profession, $email, $telephone, $password, $visa_id, $client_id);
+        $update_query->bind_param("ssssssssi", $nom, $prenom, $age, $profession, $email, $telephone, $hpwd, $visa_id, $client_id);
 
 
         $query_user = $con->prepare("UPDATE users SET nom = ?, email = ?, `password` = ? WHERE email = ?");
-        $query_user->bind_param("ssss", $nom, $email, $password, $email_id);
+        $query_user->bind_param("ssss", $nom, $email, $hpwd, $email_id);
 
         // Exécutez les requêtes et vérifiez si la mise à jour a réussi
         $client_update = $update_query->execute();
@@ -218,7 +327,68 @@
 
         $update_query->close();
         $query_user->close();
-    }
+    } else if(isset($_POST['delete_client_btn'])){
+        $client_id = intval($_POST['client_id']);
+        // $nom = $_POST['nom'];
+        // $prenom = $_POST['prenom'];
+        // $email = $_POST['email'];
+        // $telephone = $_POST['telephone'];
+        // $profession = $_POST['profession'];
+        // $age = $_POST['age'];
+        // $password = $_POST['password'];
+        // $created_at = $_POST['created_at'];
+        // $visa_client = $_POST['visa_client'];
+
+        $orderData = getClient('clients', $client_id);
+        if(mysqli_num_rows($orderData) > 0){
+            $item = mysqli_fetch_assoc($orderData);
+
+            $insert_old_client = $con->prepare("INSERT INTO old_client (id, nom, prenom, age, profession, email, telephone, `password`, visa_client, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $insert_old_client->bind_param(
+                "isssssssis", 
+                $client_id, 
+                $item['nom'], 
+                $item['prenom'], 
+                $item['age'], 
+                $item['profession'], 
+                $item['email'], 
+                $item['telephone'], 
+                $item['password'], 
+                $item['visa_client'], 
+                $item['created_at']
+            );
+
+            if($insert_old_client->execute()){
+                // Supprimer le client de la table clients
+                $delete_query = $con->prepare("DELETE FROM clients WHERE id = ?");
+                $delete_query->bind_param("i", $client_id);
+                if($delete_query->execute()){
+                    $_SESSION['message'] = "Voyageurs supprimé avec succes !";
+                    header("Location: clients.php");
+                    // redirect("clients.php", "Voyageurs supprimé avec succes !");
+                    exit();
+                } else {
+                    $_SESSION['message'] = "Erreur lors de la suppression du client !" . $delete_query->error;
+                    header("Location: clients.php");
+                    // redirect("clients.php", "Erreur lors de la suppression du client !");
+                    exit();
+                }
+            } else {
+                $_SESSION['message'] = "Erreur lors de la suppression !";
+                header("Location: clients.php");
+                // redirect("clients.php", "Erreur lors de la suppression !");
+                exit();
+            }
+
+            $insert_old_client->close();
+            $delete_query->close();
+        } else {
+            $_SESSION['message'] = "Client introuvable !";
+            header("Location: clients.php");
+            // redirect("clients.php", "Client introuvable !");
+        }
+    
+    } 
 
     // Create Update Delete Procedure Stape Part
     else if(isset($_POST['add_procedure_btn'])){
@@ -276,7 +446,7 @@
                 // redirect("visa.php",$error_message);
             }
         } else {
-            echo "Erreur lors de l'ajout de l'étape : " . $con->error;
+            $_SESSION['message'] = "Erreur lors de l'ajout de l'étape : " . $con->error;
         }
     } else if(isset($_POST['update_procedure_btn'])){
         $visa_id = $_POST['visa_id'];
@@ -321,13 +491,78 @@
         $update_query->close();
     } 
     
-    // Create Update Stape Client Part
-    else if(isset($_POST[''])){
+    // Create Update Delete Users Part
+    else if(isset($_POST['add_admin_btn'])){
+        $nom = $con->real_escape_string($_POST['nom']);
+        $email = $con->real_escape_string($_POST['email']);
+        $mdp = $_POST['password'];
+        $cmdp = $_POST['confirm_password'];
 
+        $check_query = $con->prepare("SELECT * FROM `admin` WHERE email = ?");
+        $check_query->bind_param("s", $email);
+        $check_query->execute();
+        $result = $check_query->get_result();
+        
+        $check_users = $con->prepare("SELECT * FROM users WHERE email = ?");
+        $check_users->bind_param("s", $email);
+        $check_users->execute();
+        $result = $check_users->get_result();
+
+        if(mysqli_num_rows($result) == 0){
+            if ($cmdp == $mdp){
+                $hpwd = password_hash($mdp, PASSWORD_DEFAULT);
+
+                $query_admin = $con->prepare("INSERT INTO `admin` (nom, email, `password`) VALUES (?, ?, ?)");
+                $query_admin->bind_param("sss", $nom, $email, $hpwd);
+
+                $role = 1;
+                $query_user = $con->prepare("INSERT INTO users (nom, email, `password`, `role`) VALUES (?, ?, ?, ?)");
+                $query_user->bind_param("sssi", $nom, $email, $hpwd, $role);
+                $query_user->execute();
+
+                if($query_admin->execute()){
+                    $client_id = $query_admin->insert_id;
+                    redirect("admin.php", "Administrateur ajoute avec succes !");
+                }
+            } else {
+                redirect("add-admin.php", "Les mots de passe ne correspondent pas !");
+            }
+
+        } else {
+            redirect("add-admin.php", "L'email est déjà utilisé par un autre utilisateur.");
+        }
+    } else if(isset($_POST['update_admin_btn'])){
+        $admin_id = intval($_POST['admin_id']);
+        $nom = $con->real_escape_string($_POST['nom']);
+        $email = $con->real_escape_string($_POST['email']);
+        $password = $con->real_escape_string($_POST['password']);
+        $email_id = $con->real_escape_string($_POST['email_id']);
+
+        $hpwd = password_hash($password, PASSWORD_DEFAULT);
+
+        // Préparez la requête pour mettre à jour les informations du client
+        $update_query = $con->prepare("UPDATE `admin` SET nom = ?, email = ?, `password` = ? WHERE id = ?");
+        $update_query->bind_param("sssi", $nom, $email, $hpwd, $admin_id);
+
+        $query_user = $con->prepare("UPDATE users SET nom = ?, email = ?, `password` = ? WHERE email = ?");
+        $query_user->bind_param("ssss", $nom, $email, $hpwd, $email_id);
+
+        // Exécutez les requêtes et vérifiez si la mise à jour a réussi
+        $client_update = $update_query->execute();
+        $user_update = $query_user->execute();
+        if ($client_update && $user_update) {
+            $_SESSION['message'] = "Informations d'administrateur mises à jour avec succès !";
+            header('Location: admin.php');
+        } else {
+            $_SESSION['message'] = "Erreur de mise à jour des informations d'administrateur : " . $update_query->error;
+            header('Location: edit-admin.php?id=' . $client_id);
+        }
+
+        $update_query->close();
+        $query_user->close();
     }
     
     else {
         header("Location: index.php");
     }
-
 ?>

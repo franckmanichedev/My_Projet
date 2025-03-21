@@ -161,7 +161,7 @@
                         clearTimeout(timeout);
                         timeout = setTimeout(() => {
                             window.location.href = 'logout.php';
-                        }, 18000); // 30 minutes (180000)
+                        }, 180000); // 30 minutes (180000)
                     }
 
                     document.addEventListener('mousemove', resetTimeout);
