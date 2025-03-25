@@ -234,7 +234,7 @@
                         $mail->send();
                         // $_SESSION['message'] = "Client ajoute avec succes !";
                         // header("Location: add-password.php?id=$client_id");
-                        redirect("visa.php", "Client ajoute avec succes !");
+                        redirect("clients.php", "Client ajoute avec succes !");
                         // exit();
                     } catch (Exception $e) {
                         // $_SESSION['message'] = "Erreur lors de l'envoi de l'email : " . $mail->ErrorInfo;
