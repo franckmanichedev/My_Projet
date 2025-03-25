@@ -10,17 +10,6 @@
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="card">
-                    <?php 
-                        if(isset($_SESSION['message'])){
-                            ?>
-                                <div class="alert alert-warning" role="alert">
-                                    <a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                    <strong>Oops!</strong> <?= $_SESSION['message']; ?>
-                                </div>
-                            <?php
-                            unset($_SESSION['message']);
-                        } 
-                    ?>
                     <div class="card-header">
                         Ajouter un nouveau clients
                         <a href="clients.php" class="btn btn-primary float-end"><i class="bi bi-reply-fill"></i> Retour</a>
@@ -30,7 +19,7 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <label for="" class="">Visa demandé</label>
-                                    <select required id="" onchange="showLevelSelect(this.value)" name="visa_id" class="form-select bordered" required>
+                                    <select id="" onchange="showLevelSelect(this.value)" name="visa_id" class="form-select bordered" required>
                                         <option selected disabled>Selectionnez type visa</option>
                                         <?php
                                             $visa = getAll("visa");

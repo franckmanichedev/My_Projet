@@ -8,17 +8,6 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card strpied-tabled-with-hover">
-                <?php 
-                    if(isset($_SESSION['message'])){
-                        ?>
-                            <div class="alert alert-success" role="alert">
-                                <a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                <strong>Hey!</strong> <?= $_SESSION['message']; ?>
-                            </div>
-                        <?php
-                        unset($_SESSION['message']);
-                    } 
-                ?>
                 <div class="card-header fw-bold align-items-center">
                     Tout les clients voyageurs
                     <a href="add-clients.php" class="btn btn-primary float-end"><i class="bi bi-plus-lg"></i> Ajouter un client</a>

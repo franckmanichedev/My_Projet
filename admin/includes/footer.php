@@ -31,9 +31,12 @@
             </div>
         </div>
 
+        <!-- CUSTOM FILE -->
+        <script src="assets/js/custom.js"></script>
+
         <!--   BOOTSTRAP JS Files   -->
-        <script src="../../assets/js/jquery.3.7.1.min.js"></script>
-        <script src="assets/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/jquery.3.7.1.min.js"></script>
+        <!-- <script src="assets/js/bootstrap.bundle.min.js"></script> -->
         <script src="assets/js/jquery.min.js"></script>
         <script src="assets/js/popper.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
@@ -43,8 +46,24 @@
         <script src="assets/js/black-dashboard.min.js?v=1.0.0"></script>
         <script src="assets/js/demo.js"></script>
 
+        <!-- SweetAlert -->
+         <script src="assets/js/sweetalert.min.js"></script>
+
         <!-- Contrast -->
         <script src="../../assets/js/cdb.min.js"></script>
- 
+    
+        <!-- ALERTIFY JS -->
+        <script src="assets/js/alertify.min.js"></script>
+        <script>
+            <?php 
+                if(isset($_SESSION['message'])){
+                    ?>
+                        alertify.set('notifier','position', 'top-right');
+                        alertify.success('<?= addslashes($_SESSION['message']); ?>');
+                    <?php
+                    unset($_SESSION['message']);
+                }
+            ?>
+        </script>
     </body>
 </html>

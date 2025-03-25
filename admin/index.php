@@ -7,17 +7,6 @@
 <div class="content">
     <div class="col-md-12">
         <div class="row">
-            <?php 
-                if(isset($_SESSION['message'])){
-                    ?>
-                        <div class="alert alert-warning" role="alert">
-                            <a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            <strong>Hey!</strong> <?= $_SESSION['message']; ?>
-                        </div>
-                    <?php
-                    unset($_SESSION['message']);
-                } 
-            ?>
             <div class="col-xl-12 col-sm-12 mb-xl-0 mb-4">
                 <div class="card p-3 border-radius-lg text-white mb-4" style="background: rgb(112, 0, 0);">
                     <h3 class="mb-0 h4 font-weight-bolder mb-3 text-info">Bienvenue <?= $_SESSION['auth_user']['nom'] ?> !</h3>

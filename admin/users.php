@@ -67,15 +67,16 @@
                                                 <td>
                                                     <?php
                                                         $role = $item['role'];
+                                                        $user_id = $item['id'];
                                                         if($role == 1){
                                                     ?>
-                                                        <span class="slow-speed-toggle active">
+                                                        <span class="slow-speed-toggle active" data-id="<?= $user_id ?>" data-state="1">
                                                             <span class="toggle-icon"></span>
                                                         </span>
                                                     <?php
                                                         } else {
                                                             ?>
-                                                                <span class="slow-speed-toggle">
+                                                                <span class="slow-speed-toggle" data-id="<?= $user_id ?>" data-state="0">
                                                                     <span class="toggle-icon"></span>
                                                                 </span>
                                                             <?php
@@ -114,20 +115,35 @@
         </div>
     </div>
 </div>
+<?php include "./includes/footer.php"; ?>
 <script>
-    const toggleButton = document.querySelectorAll('.slow-speed-toggle');
-    toggleButton.forEach((toggleButton) => {
-        toggleButton.addEventListener('click', () => {
-            toggleButton.classList.toggle('active');
-            const toggleState = toggleButton.classList.contains('active') ? 1 : 0;
-            fetch('update_role.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body:`toggle_state=${toggleState}`
-            });
+    $(document).on('click', '.slow-speed-toggle', function(){
+        const toogle = $(this);
+        const userId = toogle.data('id');
+        const currentState = toogle.data('active');
+        const newState = currentState === 1 ? 0 : 1;
+        // toogle.data('active', newState);
+        $.ajax({
+            url: 'update_role.php',
+            type: 'POST',
+            data: {
+                toggle_state: newState,
+                user_id: userId
+            },
+            success: function(response){
+                console.log(response);
+                // Mettre a jour l'interface utilisateur
+                if(newState === 1){
+                    toogle.addClass('active').data('state', 1);
+                } else {
+                    toogle.removeClass('active').data('state', 0);
+                }
+                alert("Role mis a jour avec succes");
+            },
+            error: function(error){
+                console.log(error);
+                alert("Erreur lors de la mise a jour du role");
+            }
         });
     });
 </script>
-<?php include "./includes/footer.php"; ?>

@@ -10,17 +10,6 @@
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="card">
-                    <?php 
-                        if(isset($_SESSION['message'])){
-                            ?>
-                                <div class="alert alert-warning" role="alert">
-                                    <a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                    <strong>Oops!</strong> <?= $_SESSION['message']; ?>
-                                </div>
-                            <?php
-                            unset($_SESSION['message']);
-                        } 
-                    ?>
                     <div class="card-header">
                         Ajouter un nouveau clients
                         <a href="clients.php" class="btn btn-primary float-end"><i class="bi bi-reply-fill"></i> Retour</a>

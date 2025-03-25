@@ -18,8 +18,9 @@
     <link href="../assets/css/owl.theme.css" rel="stylesheet" />
     <link href="../assets/css/owl.transitions.css" rel="stylesheet" />
     
-    <!-- STEPPER CSS FILES -->
-    <!-- <link href="../assets/css/cdb.min.css" rel="stylesheet" /> -->
+    <!-- ALERTIFY CSS -->
+    <link rel="stylesheet" href="assets/css/alertify.min.css"/>
+    <link rel="stylesheet" href="assets/css/alertify.bootstrap.min.css" />
 
     <style>
         body {

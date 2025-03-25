@@ -8,19 +8,6 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="col-md-6">
-                        <?php 
-                            if(isset($_SESSION['message'])){
-                                    ?>
-                                        <div class="alert alert-warning" role="alert">
-                                            <a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                            <strong>Erreur!</strong> <?= $_SESSION['message']; ?>
-                                        </div>
-                                    <?php
-                                unset($_SESSION['message']);
-                            } 
-                        ?>
-                    </div>
                     <div class="col-md-12 mb-5">
                         <p class="text-uppercase text-center">Destinations que vous pouvez visiter</p>
                         <h3 class="text-center titre mb-4">Les destinations que nous soutenons pour l'<span style="color: red;"><br>immigration</span></h3>

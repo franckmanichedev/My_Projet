@@ -14,18 +14,6 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-6">
-                <?php 
-                    if(isset($_SESSION['message'])){
-
-                ?>
-                    <div class="alert alert-warning">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>Erreur!</strong> <?= $_SESSION['message']; ?>
-                    </div>
-                <?php
-                    unset($_SESSION['message']);
-                    } 
-                ?>
                 <div class="card-header">
                     <h2>Connectez vous a votre compte</h2>
                 </div>

@@ -23,7 +23,11 @@
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="assets/css/demo.css" rel="stylesheet" />
   <link href="assets/css/material-dashboard.css" rel="stylesheet" />
-  <link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet" />
+  <link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet" />   
+
+    <!-- ALERTIFY CSS -->
+    <link rel="stylesheet" href="assets/css/alertify.min.css"/>
+    <link rel="stylesheet" href="assets/css/alertify.bootstrap.min.css" />
 </head>
 
 <body>

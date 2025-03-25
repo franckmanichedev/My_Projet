@@ -27,17 +27,6 @@
             <div class="container">
                 <div class="row mt-3">
                     <div class="col-lg-12">
-                        <?php 
-                            if(isset($_SESSION['message'])){
-                                ?>
-                                    <div class="alert alert-warning" role="alert">
-                                        <a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                        <strong>Hey!</strong> <?= $_SESSION['message']; ?>
-                                    </div>
-                                <?php
-                                unset($_SESSION['message']);
-                            } 
-                        ?>
                         <div id="alert-container"></div>
                         <div class="card">
                             <div class="card-header">

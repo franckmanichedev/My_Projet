@@ -30,9 +30,9 @@
         if($visa_query->execute()){
             // Verifier si le fichier est charge avec success
             if(move_uploaded_file($_FILES['image']['tmp_name'], $path ."/". $filename)){
-                $_SESSION['message'] = "Categorie ajoute avec succes !";
-                header('Location: visa.php');
-                // redirect("visa.php", "Categorie ajoute avec succes !");
+                // $_SESSION['message'] = "Categorie ajoute avec succes !";
+                // header('Location: visa.php');
+                redirect("visa.php", "Categorie ajoute avec succes !");
             } else {
                 // Affichez des erreurs détaillées
                 $error_message = "Erreur lors du telechargement du fichier !";
@@ -62,14 +62,14 @@
                         $error_message .= " Erreur inconnue.";
                         break;
                 }
-                $_SESSION['message'] = $error_message;
-                header('Location: visa.php');
-                // redirect("visa.php",$error_message);
+                // $_SESSION['message'] = $error_message;
+                // header('Location: visa.php');
+                redirect("visa.php",$error_message);
             }
         } else {
-            $_SESSION['message'] = "Erreur d'ajout du type de visa !" . $visa_query->error;
-            header('Location: visa.php');
-            // redirect("visa.php", "Erreur d'ajout de la categorie !" . $visa_query->error);
+            // $_SESSION['message'] = "Erreur d'ajout du type de visa !" . $visa_query->error;
+            // header('Location: visa.php');
+            redirect("visa.php", "Erreur d'ajout de la categorie !" . $visa_query->error);
         }
         $visa_query->close();
     } else if (isset($_POST['update_visa_btn'])){
@@ -97,19 +97,19 @@
                         unlink('../uploads/'.$old_image);
                     }
                 } else {
-                    $_SESSION['message'] = "Categorie ajoute avec succes !";
-                    header('Location: visa.php');
-                    // redirect("edit-visa.php?id=$visa_id", "Categorie ajoute avec succes !");
-                    exit();
+                    // $_SESSION['message'] = "Categorie ajoute avec succes !";
+                    // header('Location: visa.php');
+                    redirect("edit-visa.php?id=$visa_id", "Categorie ajoute avec succes !");
+                    // exit();
                 }
             }
-            $_SESSION['message'] = "Type de visa modifier avec succes !";
-            header('Location: visa.php');
-            // redirect("edit-category.php?id=$visa_id", "Type de visa modifier avec succes !");
+            // $_SESSION['message'] = "Type de visa modifier avec succes !";
+            // header('Location: visa.php');
+            redirect("visa.php", "Type de visa modifier avec succes !");
         } else {
-            $_SESSION['message'] = "Erreur de mise a jour du type de visa !";
-            header('Location: visa.php?id=$visa_id');
-            // redirect("edit-category.php?id=$visa_id", "Erreur de mise a jour du type de visa !" . $update_query->error);
+            // $_SESSION['message'] = "Erreur de mise a jour du type de visa !";
+            // header('Location: visa.php?id=$visa_id');
+            redirect("edit-visa.php?id=$visa_id", "Erreur de mise a jour du type de visa !" . $update_query->error);
         }
         $update_query->close();
     } else if(isset($_POST['delete_visa_btn'])){
@@ -131,14 +131,14 @@
             if(file_exists('../uploads/'.$image)){
                 unlink('../uploads/'.$image);
             }
-            $_SESSION['message'] = "Categorie supprimer avec succes !";
-            header('Location: visa.php');
-            // redirect("visa.php", "Category supprimer avec success !");
+            // $_SESSION['message'] = "Categorie supprimer avec succes !";
+            // header('Location: visa.php');
+            redirect("visa.php", "Category supprimer avec success !");
             // echo 200;
         } else {
-            $_SESSION['message'] = "Erreur lors du chargement du fichier !";
-            header('Location: visa.php');
-            // redirect("visa.php", "Erreur lors du chargement du fichier !");
+            // $_SESSION['message'] = "Erreur lors du chargement du fichier !";
+            // header('Location: visa.php');
+            redirect("visa.php", "Erreur lors du chargement du fichier !");
             // echo 500;
         }
     
@@ -150,9 +150,10 @@
 
         // Verifier si l'email est valide
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $_SESSION['message'] = "L'email n'est pas valide !";
-            header('Location: add-clients.php');
-            exit();
+            redirect("add-clients.php", "L'email n'est pas valide !");
+            // $_SESSION['message'] = "L'email n'est pas valide !";
+            // header('Location: add-clients.php');
+            // exit();
         }
 
         // Verifier si l'email existe reellement
@@ -163,16 +164,18 @@
         $result = json_decode($response, true);
 
         if (!$result['is_valid_format']['value'] || $result['deliverability'] !== 'DELIVERABLE') {
-            $_SESSION['message'] = "L'email que vous avez entré n'existe pas !";
-            header('Location: add-clients.php');
+            redirect("add-clients.php", "L'email que vous avez entré n'existe pas !");
+            // $_SESSION['message'] = "L'email que vous avez entré n'existe pas !";
+            // header('Location: add-clients.php');
             exit();
         }else{
             if (isset($_POST['visa_id'])) {
                 $visa_id = $_POST['visa_id'];
             } else {
-                $_SESSION['message'] = "Id_visa non spécifié !";
-                header('Location: add-clients.php');
-                exit();
+                redirect("add-clients.php", "Id_visa non spécifié !");
+                // $_SESSION['message'] = "Id_visa non spécifié !";
+                // header('Location: add-clients.php');
+                // exit();
             }
             $nom = $con->real_escape_string($_POST['nom']);
             $prenom = $con->real_escape_string($_POST['prenom']);
@@ -229,21 +232,21 @@
                         $mail->AltBody = 'Veuillez cliquer sur le lien pour définir votre mot de passe.';
                         
                         $mail->send();
-                        $_SESSION['message'] = "Client ajoute avec succes !";
-                        header("Location: add-password.php?id=$client_id");
-                        // redirect("visa.php", "Client ajoute avec succes !");
-                        exit();
+                        // $_SESSION['message'] = "Client ajoute avec succes !";
+                        // header("Location: add-password.php?id=$client_id");
+                        redirect("visa.php", "Client ajoute avec succes !");
+                        // exit();
                     } catch (Exception $e) {
-                        $_SESSION['message'] = "Erreur lors de l'envoi de l'email : " . $mail->ErrorInfo;
-                        header("Location: add-clients.php");
-                        // redirect("add-clients.php", "Erreur lors de l'envoi de l'email : " . $mail->ErrorInfo);
-                        exit();
+                        // $_SESSION['message'] = "Erreur lors de l'envoi de l'email : " . $mail->ErrorInfo;
+                        // header("Location: add-clients.php");
+                        redirect("add-clients.php", "Erreur lors de l'envoi de l'email : " . $mail->ErrorInfo);
+                        // exit();
                     }
                 } else {
-                    $_SESSION['message'] = "Erreur d'ajout du client !" . $query_client->error;
-                    header("Location: add-clients.php");
-                    // redirect("add-clients.php", "Erreur d'ajout du client !" . $query_client->error);
-                    exit();
+                    // $_SESSION['message'] = "Erreur d'ajout du client !" . $query_client->error;
+                    // header("Location: add-clients.php");
+                    redirect("add-clients.php", "Erreur d'ajout du client !" . $query_client->error);
+                    // exit();
                 }
                 
                 $role = 0;
@@ -252,13 +255,15 @@
                 $query_user->bind_param("ssi", $nom, $email, $role);
                 
                 if(!$query_user->execute()){
-                    $_SESSION['message'] = "Erreur d'ajout de l'utilisateur !" . $query_user->error;
-                    header("Location: add-clients.php");
-                    exit();
+                    // $_SESSION['message'] = "Erreur d'ajout de l'utilisateur !" . $query_user->error;
+                    // header("Location: add-clients.php");
+                    redirect("add-clients.php", "Erreur d'ajout de l'utilisateur !");
+                    // exit();
                 } else {
-                    $_SESSION['message'] = "Utilisateur ajoute avec succes !";
-                    header("Location: add-clients.php");
-                    exit();
+                    // $_SESSION['message'] = "Utilisateur ajoute avec succes !";
+                    // header("Location: add-clients.php");
+                    redirect("add-clients.php", "Utilisateur ajoute avec succes !");
+                    // exit();
                 }
 
             } else {
@@ -278,15 +283,15 @@
             $query->bind_param("si", $hashed_password, $id_client);
 
             if($query->execute()){
-                $_SESSION['message'] = "Mot de passe ajoute avec succes !";
-                header('Location: clients.php');
-                // redirect("clients.php", "Mot de passe ajoute avec succes !");
-                exit();
+                // $_SESSION['message'] = "Mot de passe ajoute avec succes !";
+                // header('Location: clients.php');
+                redirect("clients.php", "Mot de passe ajoute avec succes !");
+                // exit();
             } else {
-                $_SESSION['message'] = "Erreur d'ajout du mot de passe !" . $query->error;
-                header('Location: add-password.php?id=' . $id_client);
-                // redirect("add-password.php?id=' . $id_client", "Erreur d'ajout du mot de passe !" . $visa_query->error);
-                exit();
+                // $_SESSION['message'] = "Erreur d'ajout du mot de passe !" . $query->error;
+                // header('Location: add-password.php?id=' . $id_client);
+                redirect("add-password.php?id=' . $id_client", "Erreur d'ajout du mot de passe !" . $visa_query->error);
+                // exit();
             }
         } else {
             $_SESSION['message'] = "Les mots de passe ne correspondent pas !";
@@ -318,11 +323,13 @@
         $client_update = $update_query->execute();
         $user_update = $query_user->execute();
         if ($client_update && $user_update) {
-            $_SESSION['message'] = "Informations du client mises à jour avec succès !";
-            header('Location: clients.php');
+            // $_SESSION['message'] = "Informations du client mises à jour avec succès !";
+            // header('Location: clients.php');
+            redirect("clients.php", "Informations du client mises à jour avec succès !");
         } else {
-            $_SESSION['message'] = "Erreur de mise à jour des informations du client : " . $update_query->error;
-            header('Location: edit-clients.php?id=' . $client_id);
+            // $_SESSION['message'] = "Erreur de mise à jour des informations du client : " . $update_query->error;
+            // header('Location: edit-clients.php?id=' . $client_id);
+            redirect("edit-clients.php", "Erreur de mise à jour des informations du client : " . $update_query->error);
         }
 
         $update_query->close();
@@ -363,29 +370,29 @@
                 $delete_query = $con->prepare("DELETE FROM clients WHERE id = ?");
                 $delete_query->bind_param("i", $client_id);
                 if($delete_query->execute()){
-                    $_SESSION['message'] = "Voyageurs supprimé avec succes !";
-                    header("Location: clients.php");
-                    // redirect("clients.php", "Voyageurs supprimé avec succes !");
-                    exit();
+                    // $_SESSION['message'] = "Voyageurs supprimé avec succes !";
+                    // header("Location: clients.php");
+                    redirect("clients.php", "Voyageurs supprimé avec succes !");
+                    // exit();
                 } else {
-                    $_SESSION['message'] = "Erreur lors de la suppression du client !" . $delete_query->error;
-                    header("Location: clients.php");
-                    // redirect("clients.php", "Erreur lors de la suppression du client !");
-                    exit();
+                    // $_SESSION['message'] = "Erreur lors de la suppression du client !" . $delete_query->error;
+                    // header("Location: clients.php");
+                    redirect("clients.php", "Erreur lors de la suppression du client !");
+                    // exit();
                 }
             } else {
-                $_SESSION['message'] = "Erreur lors de la suppression !";
-                header("Location: clients.php");
-                // redirect("clients.php", "Erreur lors de la suppression !");
-                exit();
+                // $_SESSION['message'] = "Erreur lors de la suppression !";
+                // header("Location: clients.php");
+                redirect("clients.php", "Erreur lors de la suppression !");
+                // exit();
             }
 
             $insert_old_client->close();
             $delete_query->close();
         } else {
-            $_SESSION['message'] = "Client introuvable !";
-            header("Location: clients.php");
-            // redirect("clients.php", "Client introuvable !");
+            // $_SESSION['message'] = "Client introuvable !";
+            // header("Location: clients.php");
+            redirect("clients.php", "Client introuvable !");
         }
     
     } 
@@ -409,9 +416,9 @@
         $query_procedure->bind_param("isss", $visa_id, $libelle, $description, $filename);
         if ($query_procedure->execute()) {
             if(move_uploaded_file($_FILES['image']['tmp_name'], $path ."/". $filename)){
-                $_SESSION['message'] = "Categorie ajoute avec succes !";
-                header("Location: details-visa.php?id=$visa_id");
-                // redirect("visa.php", "Categorie ajoute avec succes !");
+                // $_SESSION['message'] = "Categorie ajoute avec succes !";
+                // header("Location: details-visa.php?id=$visa_id");
+                redirect("details-visa.php?id=$visa_id", "Categorie ajoute avec succes !");
             } else {
                 // Affichez des erreurs détaillées
                 $error_message = "Erreur lors du telechargement du fichier !";
@@ -441,9 +448,9 @@
                         $error_message .= " Erreur inconnue.";
                         break;
                 }
-                $_SESSION['message'] = $error_message;
-                header('Location: visa.php');
-                // redirect("visa.php",$error_message);
+                // $_SESSION['message'] = $error_message;
+                // header('Location: visa.php');
+                redirect("visa.php",$error_message);
             }
         } else {
             $_SESSION['message'] = "Erreur lors de l'ajout de l'étape : " . $con->error;
@@ -474,19 +481,19 @@
                         unlink('../uploads/'.$old_image);
                     }
                 } else {
-                    $_SESSION['message'] = "Etape de procedure ajoute avec succes !";
-                    header("Location: details-visa.php?id=$visa_id");
-                    // redirect("details-visa.php?id=$visa_id", "Etape de procedure ajoute avec success !");
-                    exit();
+                    // $_SESSION['message'] = "Etape de procedure ajoute avec succes !";
+                    // header("Location: details-visa.php?id=$visa_id");
+                    redirect("details-visa.php?id=$visa_id", "Erreur de mise a jour de l'image procedure !");
+                    // exit();
                 }
             }
-            $_SESSION['message'] = "Etape de procedure modifier avec succes !";
-            header("Location: details-visa.php?id=$visa_id");
-            // redirect("details-visa.php?id=$visa_id", "Etape de procedure mise a jour avec succes !");
+            // $_SESSION['message'] = "Etape de procedure modifier avec succes !";
+            // header("Location: details-visa.php?id=$visa_id");
+            redirect("visa.php", "Etape de procedure mise a jour avec succes !");
         } else {
-            $_SESSION['message'] = "Erreur de mise a jour de l'etape de procedure !";
-            header("Location: details-visa.php?id=$visa_id");
-            // redirect("details-visa.php?id=$visa_id", "Erreur de mise a jour de l'etape de procedure !" . $update_query->error);
+            // $_SESSION['message'] = "Erreur de mise a jour de l'etape de procedure !";
+            // header("Location: details-visa.php?id=$visa_id");
+            redirect("details-visa.php?id=$visa_id", "Erreur de mise a jour de l'etape de procedure !" . $update_query->error);
         }
         $update_query->close();
     } 
